@@ -1,9 +1,0 @@
----
-- !ruby/object:Customer
-  name: Dane Thomsons
-  phone_number: '0428947442'
-  email: Dane.thomson@Outlook.com
-- !ruby/object:Customer
-  name: Ian Thomson
-  phone_number: '042905009'
-  email: dithomson62@bigpond.com
