@@ -2,12 +2,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     bcrypt (3.1.16)
+    colorize (0.8.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bcrypt (~> 3.1)
+  colorize (~> 0.8.1)
 
 BUNDLED WITH
    2.1.4

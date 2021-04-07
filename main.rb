@@ -3,6 +3,7 @@
 require('csv')
 require('yaml')
 require('bcrypt')
+require('colorize')
 
 quit = false
 user = {}
@@ -161,8 +162,6 @@ def check_out_book(books,customer, time)
     puts "Please enter full title of a book to check out"
     book_title = gets.chomp
     books.collect! do |book|
-    p book.title
-    p book_title
         if book.title == book_title
             book.checkout(customer, time)
             puts "#{book_title} is now checked out to #{customer.name}"
@@ -202,12 +201,12 @@ def check_overdue_books(books)
         if book.checked_out_date != nil
             if book.checked_out_date < Date.today
                 flag = true
-                puts "'#{book.title}' is overdue please contact #{book.checked_out_to}"
+                puts "'#{book.title}' is overdue please contact #{book.checked_out_to}".colorize(:red)
             end
         end
     end
     if !flag 
-        puts "There are currently no overdue books!"
+        puts "There are currently no overdue books!".colorize(:green)
     end
 end
 
@@ -222,12 +221,12 @@ books = load_data("books")
 #DEBUG MODE
 user = {username: "ph", password: "123"}
 
-check_overdue_books(books)
+hasCheckedOverDueBooks = false
 
 while true
     #Shuold repeat this loop until the user is signed in
     until user != {}
-        puts "Options: login, signup, quit"
+        puts "Options: login, signup, quit".colorize(:blue)
         input = gets.chomp
 
         if input == "quit"
@@ -242,7 +241,6 @@ while true
             else
                 puts "Username already exists"
             end
-            p user
 
         elsif input == "login"
             username, password = get_login_details()
@@ -260,9 +258,12 @@ while true
             end
         end
     end
-
+    if !hasCheckedOverDueBooks
+        check_overdue_books(books)
+        hasCheckedOverDueBooks = true
+    end
     #Once user is signed in then application can do its thing
-    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit"
+    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit".colorize(:blue)
     input = gets.chomp.downcase
     #Add user
     case input
