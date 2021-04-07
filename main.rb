@@ -48,7 +48,7 @@ attr_reader :title, :author, :year
     end
 
     def to_s
-        "Name: #{@title}, Author: #{@author}, Year: #{@year}"
+        "Name: #{@title}, Author: #{@author}, Year: #{@year}, Is Checked out: #{@checkedout}"
     end
 
     def checkout(customer, return_date)
@@ -164,10 +164,24 @@ def check_out_book(books,customer, time)
     p book_title
         if book.title == book_title
             book.checkout(customer, time)
+            puts "#{book_title} is now checked out to #{customer.name}"
             return books
         end
     end
     return puts "Book not found"
+end
+
+def check_book_in(books)
+    puts "Please enter the full title of the book to check in"
+    book_title = gets.chomp
+    books.collect! do |book|
+        if book.title == book_title
+            book.checkin()
+            puts "#{book_title} is now checked in!"
+            return books
+         end
+    end
+    puts "Book not found!"
 end
 
 def get_customer(customers)
@@ -190,7 +204,7 @@ books = load_data("books")
 
 
 #DEBUG MODE
-# user = {username: "ph", password: "123"}
+user = {username: "ph", password: "123"}
 
 while true
     #Shuold repeat this loop until the user is signed in
@@ -230,7 +244,7 @@ while true
     end
 
     #Once user is signed in then application can do its thing
-    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook quit"
+    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, quit"
     input = gets.chomp.downcase
     #Add user
     case input
@@ -252,9 +266,12 @@ while true
         end
     when "checkoutbook"
         customer = get_customer(customers)
-        p books
         books = check_out_book(books, customer, Time.now.day + 3)
         save_data("books", books)
+    when "checkinbook"
+        books = check_book_in(books)
+        save_data("books", books)
+
     when "quit"
         puts "Good Bye!"
         return
@@ -262,4 +279,3 @@ while true
 
     end
 end
-puts "Program over Good Bye!"
