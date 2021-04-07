@@ -45,6 +45,7 @@ attr_reader :title, :author, :year
         @year = year
         @checkedout = false
         @checked_out_to = nil
+        @checked_out_date = nil
     end
 
     def to_s
@@ -195,6 +196,16 @@ def get_customer(customers)
     return puts "Customer not found"
 end
 
+def check_overdue_books(books)
+    books.each do |book|
+        if book.checked_out_date != nil
+            if book.checked_out_date < Date.today
+                puts "'#{book.title}' is overdue please contact #{book.checked_out_to}"
+            end
+        end
+    end
+end
+
 #METHODS ----------------------------------------------------------------
 
 
@@ -205,6 +216,8 @@ books = load_data("books")
 
 #DEBUG MODE
 user = {username: "ph", password: "123"}
+
+check_overdue_books(books)
 
 while true
     #Shuold repeat this loop until the user is signed in
@@ -266,7 +279,7 @@ while true
         end
     when "checkoutbook"
         customer = get_customer(customers)
-        books = check_out_book(books, customer, Time.now.day + 3)
+        books = check_out_book(books, customer, Date.today + 3)
         save_data("books", books)
     when "checkinbook"
         books = check_book_in(books)
