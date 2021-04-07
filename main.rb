@@ -1,6 +1,4 @@
 #Application for librarian
-
-require('csv')
 require('yaml')
 require('bcrypt')
 require('colorize')
@@ -11,17 +9,6 @@ user = {}
 users = []
 customers = []
 books = []
-
-# def print_from_csv()
-# CSV.open("users.csv", "a+") do |csv|
-#     csv.each do |row|
-#         p row
-#     end
-# end
-# end
-
-# print_from_csv()
-
 
 # CLASSES ---------------------------------------------------------------
 #Customer class
@@ -108,13 +95,6 @@ def find_user?(username)
     end
         return false
 end
-
-#Add the user to the csv file
-# def add_user_csv(details)
-#     CSV.open("users.csv", "a") do |csv|
-#         csv << details
-#     end
-# end
 
 
 #Signup
