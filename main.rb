@@ -76,22 +76,22 @@ end
 
 #Add a new customer
 def create_customer()
-    puts "Customer Name?"
+    puts "Customer Name?".colorize(:light_blue)
     name = gets.chomp
-    puts "Customer Email?"
+    puts "Customer Email?".colorize(:light_blue)
     email = gets.chomp
-    puts "Customer Phone Number?"
+    puts "Customer Phone Number?".colorize(:light_blue)
     phone = gets.chomp
 
     return Customer.new(name, phone, email)
 end
 
 def create_book()
-    puts "Book Name?"
+    puts "Book Name?".colorize(:light_blue)
     name = gets.chomp
-    puts "Book Author?"
+    puts "Book Author?".colorize(:light_blue)
     author = gets.chomp
-    puts "Book year it was released?"
+    puts "Book year it was released?".colorize(:light_blue)
     year = gets.chomp
 
     return Book.new(name, author, year)
@@ -132,9 +132,9 @@ end
 
 #Get user input
 def get_login_details()
-    puts "please input your username"
+    puts "please input your username".colorize(:light_blue)
     user = gets.chomp
-    puts "Please enter your password"
+    puts "Please enter your password".colorize(:light_blue)
     pass = gets.chomp
 
     return user, pass
@@ -159,29 +159,29 @@ def load_data(filepath)
 end
 
 def check_out_book(books,customer, time)
-    puts "Please enter full title of a book to check out"
+    puts "Please enter full title of a book to check out".colorize(:light_blue)
     book_title = gets.chomp
     books.collect! do |book|
         if book.title == book_title
             book.checkout(customer, time)
-            puts "#{book_title} is now checked out to #{customer.name}"
+            puts "#{book_title} is now checked out to #{customer.name}".colorize(:green)
             return books
         end
     end
-    return puts "Book not found"
+    return puts "Book not found".colorize(:red)
 end
 
 def check_book_in(books)
-    puts "Please enter the full title of the book to check in"
+    puts "Please enter the full title of the book to check in".colorize(:light_blue)
     book_title = gets.chomp
     books.collect! do |book|
         if book.title == book_title
             book.checkin()
-            puts "#{book_title} is now checked in!"
+            puts "#{book_title} is now checked in!".colorize(:green)
             return books
          end
     end
-    puts "Book not found!"
+    puts "Book not found!".colorize(:red)
 end
 
 def get_customer(customers)
