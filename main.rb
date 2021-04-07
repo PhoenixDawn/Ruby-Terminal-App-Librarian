@@ -197,12 +197,17 @@ def get_customer(customers)
 end
 
 def check_overdue_books(books)
+    flag = false
     books.each do |book|
         if book.checked_out_date != nil
             if book.checked_out_date < Date.today
+                flag = true
                 puts "'#{book.title}' is overdue please contact #{book.checked_out_to}"
             end
         end
+    end
+    if !flag 
+        puts "There are currently no overdue books!"
     end
 end
 
