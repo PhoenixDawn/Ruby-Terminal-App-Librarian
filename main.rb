@@ -185,14 +185,14 @@ def check_book_in(books)
 end
 
 def get_customer(customers)
-    puts "Please enter a name of a customer"
+    puts "Please enter a name of a customer".colorize(:light_blue)
     customer_name = gets.chomp
     customers.each do |customer|
         if customer.name == customer_name
             return customer
         end
     end
-    return puts "Customer not found"
+    return puts "Customer not found".colorize(:red)
 end
 
 def check_overdue_books(books)
@@ -239,7 +239,7 @@ while true
             if signedUp
                 user = signedUp
             else
-                puts "Username already exists"
+                puts "Username already exists".colorize(:red)
             end
 
         elsif input == "login"
@@ -249,12 +249,12 @@ while true
                 encrypted_password = BCrypt::Password.new(row[1])
                 if encrypted_password == password
                     user = {username:row[0], password: row[1]}
-                    puts "You are now logged in!"
+                    puts "You are now logged in!".colorize(:green)
                 else
-                    puts "Incorrect login information!"
+                    puts "Incorrect login information!".colorize(:red)
                 end
             else
-                puts "Incorrect login information!"
+                puts "Incorrect login information!".colorize(:red)
             end
         end
     end
@@ -273,7 +273,7 @@ while true
         save_data("customers", customers)
     when "viewcustomers"
         customers.each do |customer|
-            puts customer.to_s
+            puts customer.to_s.colorize(:light_green)
         end
     when "addbook"
         newBook = create_book()
@@ -281,7 +281,7 @@ while true
         save_data("books", books)
     when "viewbooks"
         books.each do |book|
-            puts book.to_s
+            puts book.to_s.colorize(:light_green)
         end
     when "checkoutbook"
         customer = get_customer(customers)
