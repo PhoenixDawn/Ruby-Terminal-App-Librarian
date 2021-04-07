@@ -2,6 +2,7 @@
 
 require('csv')
 require('yaml')
+require('bcrypt')
 
 quit = false
 user = {}
@@ -115,10 +116,13 @@ end
 
 
 #Signup
-def signup?(username, password)
+def signup(username, password)
     if !find_user?(username)
-        add_user_csv([username, password])
-        return true
+        #Encrypt password
+        encrypt_password = BCrypt::Password.create(password)        
+        user = [username, encrypt_password]
+        add_user_csv(user)
+        return user
     else
         return false
     end
@@ -186,7 +190,8 @@ books = load_data("books")
 
 
 #DEBUG MODE
-user = {username: "ph", password: "123"}
+# user = {username: "ph", password: "123"}
+
 while true
     #Shuold repeat this loop until the user is signed in
     until user != {}
@@ -199,8 +204,9 @@ while true
 
         if input == "signup"
             username, password = get_login_details()
-            if signup?(username, password)
-                user = {username: username, password: password}
+            signedUp = signup(username, password)
+            if signedUp
+                user = signedUp
             else
                 puts "Username already exists"
             end
@@ -210,7 +216,8 @@ while true
             username, password = get_login_details()
             row = find_user?(username)
             if row
-                if row[1] == password
+                encrypted_password = BCrypt::Password.new(row[1])
+                if encrypted_password == password
                     user = {username:row[0], password: row[1]}
                     puts "You are now logged in!"
                 else
