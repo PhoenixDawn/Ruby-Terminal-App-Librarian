@@ -285,8 +285,10 @@ while true
         end
     when "checkoutbook"
         customer = get_customer(customers)
+        if customer
         books = check_out_book(books, customer, Date.today + 3)
         save_data("books", books)
+        end
     when "checkinbook"
         books = check_book_in(books)
         save_data("books", books)
