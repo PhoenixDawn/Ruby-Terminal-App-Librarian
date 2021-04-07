@@ -262,7 +262,7 @@ while true
     end
 
     #Once user is signed in then application can do its thing
-    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, quit"
+    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit"
     input = gets.chomp.downcase
     #Add user
     case input
@@ -289,7 +289,8 @@ while true
     when "checkinbook"
         books = check_book_in(books)
         save_data("books", books)
-
+    when "viewoverduebooks"
+        check_overdue_books(books)
     when "quit"
         puts "Good Bye!"
         return
