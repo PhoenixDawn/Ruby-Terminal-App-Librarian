@@ -122,18 +122,26 @@ end
 #SaveData
 def save_data(filepath, entity)
     #Save Customers
-    save = YAML.dump(entity)
-    File.open("#{filepath}.yaml", "w") {|f| f.write save}
+    begin
+        save = YAML.dump(entity)
+        File.open("#{filepath}.yaml", "w") {|f| f.write save}
+    rescue
+        puts "Error saving data!".colorize(:red)
+    end
 
 end
 #LoadData
 def load_data(filepath)
-    if File.exist?("#{filepath}.yaml")
-        return YAML.load(File.read("#{filepath}.yaml"))
-    else
+    begin
+        if File.exist?("#{filepath}.yaml")
+            return YAML.load(File.read("#{filepath}.yaml"))
+        else
+            return []
+        end
+    rescue
+        puts "Error loading data #{filepath} loading empty array"
         return []
     end
-
 
 end
 
