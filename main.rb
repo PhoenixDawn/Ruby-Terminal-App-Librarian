@@ -8,6 +8,7 @@ require('colorize')
 quit = false
 user = {}
 
+users = []
 customers = []
 books = []
 
@@ -66,6 +67,7 @@ attr_reader :title, :author, :year
     end
 
 end
+
 # CLASSES ---------------------------------------------------------------
 
 
@@ -98,23 +100,21 @@ def create_book()
 end
 
 #see if the user exists. 
-def find_user?(user)
-    CSV.open("users.csv", "a+") do |csv|
-        csv.each do |row|
-            if row[0] == user
-                return row
-            end
+def find_user?(username)
+    users.each do |user|
+        if user = username
+            return true
         end
-        return false
     end
+        return false
 end
 
 #Add the user to the csv file
-def add_user_csv(details)
-    CSV.open("users.csv", "a") do |csv|
-        csv << details
-    end
-end
+# def add_user_csv(details)
+#     CSV.open("users.csv", "a") do |csv|
+#         csv << details
+#     end
+# end
 
 
 #Signup
@@ -123,7 +123,6 @@ def signup(username, password)
         #Encrypt password
         encrypt_password = BCrypt::Password.create(password)        
         user = [username, encrypt_password]
-        add_user_csv(user)
         return user
     else
         return false
@@ -216,10 +215,11 @@ end
 
 customers = load_data("customers")
 books = load_data("books")
+users = load_data("users")
 
 
 #DEBUG MODE
-user = {username: "ph", password: "123"}
+# user = {username: "ph", password: "123"}
 
 hasCheckedOverDueBooks = false
 
@@ -238,23 +238,29 @@ while true
             signedUp = signup(username, password)
             if signedUp
                 user = signedUp
+                users.push(user)
+                save_data("users", users)
             else
                 puts "Username already exists".colorize(:red)
             end
 
         elsif input == "login"
+        p users
             username, password = get_login_details()
-            row = find_user?(username)
-            if row
-                encrypted_password = BCrypt::Password.new(row[1])
-                if encrypted_password == password
-                    user = {username:row[0], password: row[1]}
-                    puts "You are now logged in!".colorize(:green)
-                else
-                    puts "Incorrect login information!".colorize(:red)
+
+            users.each do |currUser|
+                if currUser[0] == username
+                    encrypted_password = BCrypt::Password.new(currUser[1])
+                    if encrypted_password == password
+                        user = {username:currUser[0], password: currUser[1]}
+                        puts "You are now logged in!".colorize(:green)
+                    else
+                        puts "Incorrect login information!".colorize(:red)
+                    end
                 end
-            else
-                puts "Incorrect login information!".colorize(:red)
+            end
+            if user == {}
+                puts "Incorrect login information!...".colorize(:red)
             end
         end
     end
