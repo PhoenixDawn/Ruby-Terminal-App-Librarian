@@ -118,6 +118,7 @@ def check_book_in(books)
             return books
          end
     end
+    return books
     puts "Book not found!".colorize(:red)
 end
 
