@@ -28,9 +28,10 @@ def create_book()
 end
 
 #see if the user exists. 
-def find_user?(username)
+def find_user?(username, users)
     users.each do |user|
-        if user = username
+        if user[0] == username
+            puts user[0]
             return true
         end
     end
@@ -39,8 +40,8 @@ end
 
 
 #Signup
-def signup(username, password)
-    if !find_user?(username)
+def signup(username, password, users)
+    if !find_user?(username, users)
         #Encrypt password
         encrypt_password = BCrypt::Password.create(password)        
         user = [username, encrypt_password]

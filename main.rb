@@ -18,7 +18,7 @@ users = load_data("users")
 
 
 #DEBUG MODE
-user = {username: "ph", password: "123"}
+# user = {username: "ph", password: "123"}
 
 hasCheckedOverDueBooks = false
 
@@ -34,12 +34,14 @@ while true
 
         if input == "signup"
             username, password = get_login_details()
-            signedUp = signup(username, password)
+            signedUp = signup(username, password, users)
             if signedUp
                 user = signedUp
                 users.push(user)
                 save_data("users", users)
             else
+                p users
+                p user
                 puts "Username already exists".colorize(:red)
             end
 
