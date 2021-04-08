@@ -1,8 +1,0 @@
----
-- - PhoenixDawns
-  - !ruby/string:BCrypt::Password
-    str: "$2a$12$HiixGtbM0yeYLGY9xXYel.UozPkIDB6hCPbkm/f2BzgrZsCSmDhle"
-    version: 2a
-    cost: 12
-    salt: "$2a$12$HiixGtbM0yeYLGY9xXYel."
-    checksum: UozPkIDB6hCPbkm/f2BzgrZsCSmDhle
