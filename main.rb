@@ -2,6 +2,7 @@
 require('yaml')
 require('bcrypt')
 require('colorize')
+require('date')
 
 quit = false
 user = {}
@@ -121,12 +122,11 @@ end
 
 #SaveData
 def save_data(filepath, entity)
-    #Save Customers
     begin
         save = YAML.dump(entity)
         File.open("#{filepath}.yaml", "w") {|f| f.write save}
     rescue
-        puts "Error saving data!".colorize(:red)
+        puts "Error saving data! #{filepath}".colorize(:red)
     end
 
 end
@@ -139,18 +139,21 @@ def load_data(filepath)
             return []
         end
     rescue
-        puts "Error loading data #{filepath} loading empty array"
+        puts "Error loading data #{filepath} loading empty array".colorize(:red)
         return []
     end
 
 end
 
-def check_out_book(books,customer, time)
+#Check book out
+def check_out_book(books,customer)
     puts "Please enter full title of a book to check out".colorize(:light_blue)
     book_title = gets.chomp
+    puts "Please enter how long to check the book out (Days)".colorize(:light_blue)
+    time = gets.chomp.to_i
     books.collect! do |book|
         if book.title == book_title
-            book.checkout(customer, time)
+            book.checkout(customer, Date.today + time)
             puts "#{book_title} is now checked out to #{customer.name}".colorize(:green)
             return books
         end
@@ -158,6 +161,7 @@ def check_out_book(books,customer, time)
     return puts "Book not found".colorize(:red)
 end
 
+#Check book in
 def check_book_in(books)
     puts "Please enter the full title of the book to check in".colorize(:light_blue)
     book_title = gets.chomp
@@ -179,7 +183,18 @@ def get_customer(customers)
             return customer
         end
     end
-    return puts "Customer not found".colorize(:red)
+    return puts "Customer not found #{customer_name}".colorize(:red)
+end
+
+def get_book(books)
+    puts "Please enter a name of a book".colorize(:light_blue)
+    book_name = gets.chomp
+    books.each do |book|
+        if book.title == book_name 
+            return book
+        end
+    end
+    return puts "Book not found #{book_title}".colorize(:red)
 end
 
 def check_overdue_books(books)
@@ -207,7 +222,7 @@ users = load_data("users")
 
 
 #DEBUG MODE
-# user = {username: "ph", password: "123"}
+user = {username: "ph", password: "123"}
 
 hasCheckedOverDueBooks = false
 
@@ -233,7 +248,6 @@ while true
             end
 
         elsif input == "login"
-        p users
             username, password = get_login_details()
 
             users.each do |currUser|
@@ -259,7 +273,6 @@ while true
     #Once user is signed in then application can do its thing
     puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit".colorize(:blue)
     input = gets.chomp.downcase
-    #Add user
     case input
     when "addcustomer"
         newCustomer = create_customer()
@@ -273,6 +286,10 @@ while true
         newBook = create_book()
         books.push(newBook)
         save_data("books", books)
+    when "removebook"
+        book = get_book(books)
+        books.delete(book);
+        puts "Book #{book.title} removed!".colorize(:green)
     when "viewbooks"
         books.each do |book|
             puts book.to_s.colorize(:light_green)
@@ -280,7 +297,7 @@ while true
     when "checkoutbook"
         customer = get_customer(customers)
         if customer
-        books = check_out_book(books, customer, Date.today + 3)
+        books = check_out_book(books, customer)
         save_data("books", books)
         end
     when "checkinbook"
