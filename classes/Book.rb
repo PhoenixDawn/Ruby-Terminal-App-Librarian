@@ -1,6 +1,6 @@
 class Book
     attr_accessor :checked_out_to, :checked_out_date
-    attr_reader :title, :author, :year
+    attr_reader :title, :author, :year, :checkedout
         def initialize(title, author, year)
             @title = title
             @author = author

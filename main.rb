@@ -1,22 +1,16 @@
 #Application for librarian
-require('yaml')
-require('bcrypt')
 require('colorize')
-require('date')
 
 require_relative('classes/Customer.rb')
 require_relative('classes/Book.rb')
 
 require_relative('methods.rb')
 
-quit = false
 user = {}
 
 users = []
 customers = []
 books = []
-
-
 
 customers = load_data("customers")
 books = load_data("books")
@@ -73,7 +67,7 @@ while true
         hasCheckedOverDueBooks = true
     end
     #Once user is signed in then application can do its thing
-    puts "Options: AddCustomer, ViewCustomers, AddBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit".colorize(:blue)
+    puts "Options: AddCustomer, ViewCustomers, AddBook, RemoveBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit".colorize(:blue)
     input = gets.chomp.downcase
     case input
     when "addcustomer"
@@ -90,9 +84,9 @@ while true
         save_data("books", books)
     when "removebook"
         book = get_book(books)
-        books.delete(book);
-        save_data("books", books)
-        puts "Book #{book.title} removed!".colorize(:green)
+        if book 
+            puts "Book #{book.title} removed!".colorize(:green)
+        end
     when "viewbooks"
         books.each do |book|
             puts book.to_s.colorize(:light_green)

@@ -1,3 +1,8 @@
+require('yaml')
+require('bcrypt')
+require('colorize')
+require('date')
+
 
 #Add a new customer
 def create_customer()
@@ -86,14 +91,20 @@ def check_out_book(books,customer)
     book_title = gets.chomp
     puts "Please enter how long to check the book out (Days)".colorize(:light_blue)
     time = gets.chomp.to_i
-    books.collect! do |book|
+    books.each do |book|
         if book.title == book_title
-            book.checkout(customer, Date.today + time)
-            puts "#{book_title} is now checked out to #{customer.name}".colorize(:green)
-            return books
+            if !book.checkedout
+                book.checkout(customer, Date.today + time)
+                puts "#{book_title} is now checked out to #{customer.name}".colorize(:green)
+                return books
+            else
+                puts "#{book_title} is already checked out!".colorize(:red)
+                return books
+            end
         end
     end
-    return puts "Book not found".colorize(:red)
+    puts "Book not found".colorize(:red)
+    return books
 end
 
 #Check book in
@@ -129,7 +140,8 @@ def get_book(books)
             return book
         end
     end
-    return puts "Book not found #{book_title}".colorize(:red)
+    puts "Book not found #{book_name}".colorize(:red)
+    return nil
 end
 
 def check_overdue_books(books)
