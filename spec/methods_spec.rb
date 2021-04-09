@@ -24,19 +24,15 @@ customer2 = Customer.new("Smith", "54321", "Smith@e.c")
 
 customers = [customer1, customer2]
 
-
-describe 'Customer' do
-    it "It should create a new customer" do
-        expect(create_customer()).to be_a(Customer)
-        p users
+def check_if_books_checkedout(books)
+    books.each do |book|
+        if book.checkedout == true
+            return true
+        end
     end
+    return false
 end
 
-describe 'Book' do
-    it "It should create a new book" do
-        expect(create_book()).to be_a(Book)
-    end
-end
 
 describe 'Login/Signup' do
     it "It should find a user with the name 'Test1'" do
@@ -54,6 +50,24 @@ describe 'Login/Signup' do
 
 end
 
+
+describe 'Check books In/Out' do
+    it "It should check a book out to a customer" do
+        check_out_book("Title1", 10, books, customer1)
+        expect(books[0].checkedout).to be(true)
+    end
+
+    it "It should check in a book" do
+        books = check_book_in("Title1", books)
+        expect(books[0].checkedout).to be(false)
+    end
+
+    it "It should NOT check a book out to a customer'" do
+        check_out_book("BookTitle", 10, books, customer1)
+        expect(check_if_books_checkedout(books)).to be(false)
+    end
+
+end
 
 
 

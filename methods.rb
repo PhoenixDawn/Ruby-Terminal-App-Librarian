@@ -3,30 +3,6 @@ require('bcrypt')
 require('colorize')
 require('date')
 
-
-#Add a new customer
-def create_customer()
-    puts "Customer Name?".colorize(:light_blue)
-    name = gets.chomp
-    puts "Customer Email?".colorize(:light_blue)
-    email = gets.chomp
-    puts "Customer Phone Number?".colorize(:light_blue)
-    phone = gets.chomp
-
-    return Customer.new(name, phone, email)
-end
-
-def create_book()
-    puts "Book Name?".colorize(:light_blue)
-    name = gets.chomp
-    puts "Book Author?".colorize(:light_blue)
-    author = gets.chomp
-    puts "Book year it was released?".colorize(:light_blue)
-    year = gets.chomp
-
-    return Book.new(name, author, year)
-end
-
 #see if the user exists. 
 def find_user?(username, users)
     users.each do |user|
@@ -86,12 +62,9 @@ def load_data(filepath)
 
 end
 
-#Check book out
-def check_out_book(books,customer)
-    puts "Please enter full title of a book to check out".colorize(:light_blue)
-    book_title = gets.chomp
-    puts "Please enter how long to check the book out (Days)".colorize(:light_blue)
-    time = gets.chomp.to_i
+#Check book out returns modified books array, or not modified if no book is found
+def check_out_book(book_title, time, books,customer)
+
     books.each do |book|
         if book.title == book_title
             if !book.checkedout
@@ -109,9 +82,7 @@ def check_out_book(books,customer)
 end
 
 #Check book in
-def check_book_in(books)
-    puts "Please enter the full title of the book to check in".colorize(:light_blue)
-    book_title = gets.chomp
+def check_book_in(book_title, books)
     books.collect! do |book|
         if book.title == book_title
             book.checkin()

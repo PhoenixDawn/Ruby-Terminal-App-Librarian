@@ -73,7 +73,14 @@ while true
     input = gets.chomp.downcase
     case input
     when "addcustomer"
-        newCustomer = create_customer()
+        puts "Customer Name?".colorize(:light_blue)
+        name = gets.chomp
+        puts "Customer Email?".colorize(:light_blue)
+        email = gets.chomp
+        puts "Customer Phone Number?".colorize(:light_blue)
+        phone = gets.chomp
+    
+        newCustomer = Customer.new(name, phone, email)
         customers.push(newCustomer)
         save_data("customers", customers)
     when "viewcustomers"
@@ -81,7 +88,14 @@ while true
             puts customer.to_s.colorize(:light_green)
         end
     when "addbook"
-        newBook = create_book()
+        puts "Book Name?".colorize(:light_blue)
+        name = gets.chomp
+        puts "Book Author?".colorize(:light_blue)
+        author = gets.chomp
+        puts "Book year it was released?".colorize(:light_blue)
+        year = gets.chomp
+
+        newBook = Book.new(name, author, year)
         books.push(newBook)
         save_data("books", books)
     when "removebook"
@@ -95,12 +109,19 @@ while true
         end
     when "checkoutbook"
         customer = get_customer(customers)
+        puts "Please enter full title of a book to check out".colorize(:light_blue)
+        book_title = gets.chomp
+        puts "Please enter how long to check the book out (Days)".colorize(:light_blue)
+        time = gets.chomp.to_i
+
         if customer
-        books = check_out_book(books, customer)
+        books = check_out_book(book_title, time, books, customer)
         save_data("books", books)
         end
     when "checkinbook"
-        books = check_book_in(books)
+        puts "Please enter the full title of the book to check in".colorize(:light_blue)
+        book_title = gets.chomp
+        books = check_book_in(book_title, books)
         save_data("books", books)
     when "viewoverduebooks"
         check_overdue_books(books)
