@@ -97,12 +97,18 @@ end
 def get_customer(customers)
     puts "Please enter a name of a customer".colorize(:light_blue)
     customer_name = gets.chomp
-    customers.each do |customer|
-        if customer.name == customer_name
-            return customer
+    begin
+        customers.each do |customer|
+            if customer.name == customer_name
+                return customer
+            end
         end
+        return puts "Customer not found #{customer_name}".colorize(:red)
+    rescue NoMethodError
+        File.delete("customers.yaml")
+        return puts "No customer found".colorize(:red)
+
     end
-    return puts "Customer not found #{customer_name}".colorize(:red)
 end
 
 def get_book(books)

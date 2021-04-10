@@ -16,57 +16,57 @@ customers = load_data("customers")
 books = load_data("books")
 users = load_data("users")
 
-#DEBUG MODE
-# user = {username: "ph", password: "123"}
 
 hasCheckedOverDueBooks = false
 
 if ARGV.include?("--help")
     puts '      
     What options do and how to use them
--- AddCustomer
-    - Follow prompts, input Name, Phone number, Email
-    - This allows you to be able to tell which customer loaned what book.
--- ViewCustomers
-    - Shows all currently registered customers available to loan books too
--- AddBook
-    - Follow prompt, input title, author and year released
--- Remove book
-    - Follow prompt, input a title of a book you want removed from the database
--- Viewbooks
-    - View all books currently in collection
--- CheckOutBook
-    - Follow prompts, input title of book you want to loan and the name of the person to loan it to.
--- CheckInBook
-    - Follow prompts, input title of book you want to check in
--- ViewOverdueBooks
-    - Will display all currently overdue books
--- quit
-    -- Leaves program'
-
-    return
-end
-
-#login with command 
-if ARGV.length == 2
-    users.each do |currUser|
-        if currUser[0] == ARGV[0]
-            encrypted_password = BCrypt::Password.new(currUser[1])
-            if encrypted_password == ARGV[1]
-                user = {username:currUser[0], password: currUser[1]}
-                puts "You are now logged in!".colorize(:green)
-            else
-                puts "Incorrect login information!".colorize(:red)
+        -- AddCustomer
+        - Follow prompts, input Name, Phone number, Email
+        - This allows you to be able to tell which customer loaned what book.
+        -- ViewCustomers
+        - Shows all currently registered customers available to loan books too
+        -- AddBook
+        - Follow prompt, input title, author and year released
+        -- Remove book
+        - Follow prompt, input a title of a book you want removed from the database
+        -- Viewbooks
+        - View all books currently in collection
+        -- CheckOutBook
+        - Follow prompts, input title of book you want to loan and the name of the person to loan it to.
+        -- CheckInBook
+        - Follow prompts, input title of book you want to check in
+        -- ViewOverdueBooks
+        - Will display all currently overdue books
+        -- quit
+        -- Leaves program'
+        
+        return
+    end
+    
+    #login with command line
+    if ARGV.length == 2
+        users.each do |currUser|
+            if currUser[0] == ARGV[0]
+                encrypted_password = BCrypt::Password.new(currUser[1])
+                if encrypted_password == ARGV[1]
+                    user = {username:currUser[0], password: currUser[1]}
+                    puts "You are now logged in!".colorize(:green)
+                else
+                    puts "Incorrect login information!".colorize(:red)
+                end
             end
         end
+        ARGV.clear
     end
-    ARGV.clear
-end
-
-
-while true
-    #Shuold repeat this loop until the user is signed in
-    until user != {}
+    
+    #DEBUG MODE
+    user = {username: "ph", password: "123"}
+    
+    while true
+        #Shuold repeat this loop until the user is signed in
+        until user != {}
         puts "Options: login, signup, quit".colorize(:blue)
         input = gets.chomp
 
@@ -107,8 +107,14 @@ while true
         end
     end
     if !hasCheckedOverDueBooks
-        check_overdue_books(books)
-        hasCheckedOverDueBooks = true
+        begin
+            check_overdue_books(books)
+            hasCheckedOverDueBooks = true
+        rescue NoMethodError
+            books = []
+            save_data("books", books)
+            puts "No books found".colorize(:red)
+        end
     end
     #Once user is signed in then application can do its thing
     puts "Options: AddCustomer, ViewCustomers, AddBook, RemoveBook, ViewBooks, CheckOutBook, CheckInBook, ViewOverdueBooks, quit".colorize(:blue)
@@ -126,8 +132,14 @@ while true
         customers.push(newCustomer)
         save_data("customers", customers)
     when "viewcustomers"
-        customers.each do |customer|
-            puts customer.to_s.colorize(:light_green)
+        begin
+            customers.each do |customer|
+                puts customer.to_s.colorize(:light_green)
+            end
+        rescue NoMethodError
+            customers = []
+            save_data("customers", customers)
+            puts "No Customers found".colorize(:red)
         end
     when "addbook"
         puts "Book Name?".colorize(:light_blue)
